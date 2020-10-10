@@ -33,18 +33,18 @@ final inputDecoration = InputDecoration(
   border: outlineInputBorder(),
 );
 
-// final textDecoration = TextDecoration(
-
-// );
-
 final boxDecoration = BoxDecoration(
-  // color: kSecondaryColor.withOpacity(.8),
-  color: kPrimaryColor.withOpacity(.5),
+  color: kPrimaryColor,
   border: Border.all(
-    color: kPrimaryColor, // set border color
+    color: Colors.black87.withOpacity(.4),
     width: 3.0,
-  ), // set border width
-  borderRadius: BorderRadius.circular(10), // make rounded corner of border
+  ),
+  borderRadius: BorderRadius.circular(10),
+);
+
+final emptyBoxDecoration = BoxDecoration(
+  color: Colors.black87.withOpacity(.4),
+  borderRadius: BorderRadius.circular(10),
 );
 
 OutlineInputBorder outlineInputBorder() {

@@ -1,12 +1,10 @@
 import 'dart:async';
-import 'dart:math';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:quiz_app/model/Student.dart';
 import 'package:quiz_app/pin_code_fields.dart';
 import 'package:quiz_app/size_config.dart';
-import 'package:visibility_detector/visibility_detector.dart';
 
 import '../constants.dart';
 import 'components/blur_image.dart';
@@ -45,14 +43,6 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
   }
 
-  // void shuffleNameLetters(String name) {
-  //   stringToArray = students[0].name.split("");
-  //   stringToArray.shuffle();
-  //   if (stringToArray.join() == students[0].name) {
-  //     stringToArray.shuffle();
-  //   }
-  // }
-
   void shuffleNameLetters(String name) {
     Map<int, String> stringToArray = {};
     List charList = name.split("");
@@ -63,7 +53,6 @@ class _HomeScreenState extends State<HomeScreen> {
     for (var k in keys) {
       stringToArrayShuffled.putIfAbsent(k, () => stringToArray[k]);
     }
-    print(stringToArrayShuffled);
   }
 
   @override
@@ -113,26 +102,20 @@ class _HomeScreenState extends State<HomeScreen> {
                     spacing: 10,
                     runSpacing: 10,
                     children: [
-                      // ...List.generate(
-                      //   students[0].name.length,
-                      //   (index) => GestureDetector(
-                      //       onTap: () {
-                      //         shuffleNameLetters(students[index].name);
-                      //       },
-                      //       child: Text("data")),
-                      // )
                       ...List.generate(
                           stringToArrayShuffled.values.toList().length,
                           (index) {
                         return buildAnswerInput(
                           char: stringToArrayShuffled.values.toList()[index],
                           press: () {
-                            print(stringToArrayShuffled.values.toList()[index]);
-                            print(stringToArrayShuffled.keys.toList()[index]);
                             setState(() {
+                              myController.text += stringToArrayShuffled.values
+                                  .toList()[index]
+                                  .toUpperCase();
                               stringToArrayShuffled.update(
-                                  stringToArrayShuffled.keys.toList()[index],
-                                  (value) => "");
+                                stringToArrayShuffled.keys.toList()[index],
+                                (value) => "",
+                              );
                             });
                           },
                         );
@@ -165,12 +148,12 @@ class _HomeScreenState extends State<HomeScreen> {
                 ? getProportionateScreenWidth(35)
                 : getProportionateScreenWidth(20))
             : getProportionateScreenWidth(15),
-        decoration:  char == "" ? null : boxDecoration,
+        decoration: char == "" ? emptyBoxDecoration : boxDecoration,
         child: Center(
           child: Text(
             char.toUpperCase(),
             style: TextStyle(
-                fontSize: 18, color: Colors.brown, fontWeight: FontWeight.w700),
+                fontSize: 16, color: Colors.brown, fontWeight: FontWeight.w700),
             textAlign: TextAlign.center,
             // decoration: inputDecoration,
             // onChanged: (value) {},
@@ -189,6 +172,8 @@ class _HomeScreenState extends State<HomeScreen> {
         controller: myController,
         autoFocus: true,
         appContext: context,
+        textStyle: TextStyle(
+            fontSize: 14, fontWeight: FontWeight.bold, color: Colors.brown),
         backgroundColor: Colors.transparent,
         mainAxisAlignment: MainAxisAlignment.center,
         // enableActiveFill: true,
