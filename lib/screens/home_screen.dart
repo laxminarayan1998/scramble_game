@@ -20,6 +20,7 @@ class _HomeScreenState extends State<HomeScreen> {
   int seconds = 5;
   var myController = TextEditingController();
   Map<int, String> stringToArrayShuffled = {};
+  Map<int, String> deletedLettersList = {};
 
   bool _isVisible = true;
 
@@ -117,8 +118,8 @@ class _HomeScreenState extends State<HomeScreen> {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Container(
-        height: SizeConfig.screenWidth > 768
-            ? getProportionateScreenWidth(20)
+        height: SizeConfig.screenWidth >= 1440
+            ? 80
             : getProportionateScreenWidth(30),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -126,7 +127,7 @@ class _HomeScreenState extends State<HomeScreen> {
             InkWell(
               onTap: () {},
               child: Container(
-                width: getProportionateScreenWidth(150),
+                width: getProportionateScreenWidth(250),
                 height: getProportionateScreenWidth(30),
                 decoration: skipBoxDecoration,
                 child: Center(
@@ -144,16 +145,35 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
             SizedBox(width: SizeConfig.screenWidth * 0.03),
-            GestureDetector(
-              onTap: () {},
+            InkWell(
+              onTap: () {
+                if (deletedLettersList.length != 0)
+                  setState(() {
+                    stringToArrayShuffled.update(
+                        deletedLettersList.keys
+                            .toList()[deletedLettersList.length - 1],
+                        (value) => deletedLettersList.values
+                            .toList()[deletedLettersList.length - 1]);
+
+                    deletedLettersList.remove(deletedLettersList.keys
+                        .toList()[deletedLettersList.length - 1]);
+
+                    List<String> c = myController.text.split("");
+                    c.removeLast();
+                    myController.text = c.join();
+                  });
+              },
               child: Container(
                 width: getProportionateScreenWidth(30),
                 height: getProportionateScreenWidth(30),
                 decoration: clearBoxDecoration,
                 child: Center(
-                  child: Icon(
-                    Icons.arrow_back,
-                    color: Colors.white,
+                  child: FittedBox(
+                    child: Icon(
+                      Icons.arrow_back,
+                      color: Colors.white,
+                      size: 30,
+                    ),
                   ),
                 ),
               ),
@@ -182,6 +202,10 @@ class _HomeScreenState extends State<HomeScreen> {
                   myController.text += stringToArrayShuffled.values
                       .toList()[index]
                       .toUpperCase();
+                  deletedLettersList.putIfAbsent(
+                    stringToArrayShuffled.keys.toList()[index],
+                    () => stringToArrayShuffled.values.toList()[index],
+                  );
                   stringToArrayShuffled.update(
                     stringToArrayShuffled.keys.toList()[index],
                     (value) => "",
