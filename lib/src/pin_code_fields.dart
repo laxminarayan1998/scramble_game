@@ -593,7 +593,7 @@ class _PinCodeTextFieldState extends State<PinCodeTextField>
                   );
                 }
               },
-              child: Text(
+              child: AutoSizeText(
                 widget.obscureText && _inputList[i].isNotEmpty
                     ? widget.obscuringCharacter
                     : _inputList[i],

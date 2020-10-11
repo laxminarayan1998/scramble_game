@@ -30,7 +30,7 @@ dependencies:
   cupertino_icons: ^1.0.0
   websafe_svg: ^1.1.4
   pin_code_fields: ^5.2.0 
-  visibility_detector: ^0.1.5
+  auto_size_text: ^2.1.0
 
 dev_dependencies:
   flutter_test:

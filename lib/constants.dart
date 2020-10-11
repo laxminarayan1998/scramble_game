@@ -25,9 +25,6 @@ final inputDecoration = InputDecoration(
   filled: true,
   fillColor: kSecondaryColor.withOpacity(.5),
   contentPadding: EdgeInsets.zero,
-  // contentPadding: EdgeInsets.symmetric(
-  // vertical: getProportionateScreenWidth(10),
-  // ),
   enabledBorder: outlineInputBorder(),
   focusedBorder: outlineInputBorder(),
   border: outlineInputBorder(),
@@ -40,6 +37,24 @@ final boxDecoration = BoxDecoration(
     width: 3.0,
   ),
   borderRadius: BorderRadius.circular(10),
+);
+
+final skipBoxDecoration = BoxDecoration(
+  color: Color(0xFFB71616),
+  border: Border.all(
+    color: Colors.white,
+    width: 1.5,
+  ),
+  borderRadius: BorderRadius.circular(5),
+);
+
+final clearBoxDecoration = BoxDecoration(
+  color: Colors.blue,
+  border: Border.all(
+    color: Colors.white,
+    width: 1.5,
+  ),
+  borderRadius: BorderRadius.circular(5),
 );
 
 final emptyBoxDecoration = BoxDecoration(

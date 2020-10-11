@@ -18,9 +18,15 @@ class BlurImage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       height: SizeConfig.screenWidth <= 425
-          ? getProportionateScreenHeight(200)
-          : getProportionateScreenHeight(400),
-      width: getProportionateScreenWidth(200),
+          ? getProportionateScreenHeight(300)
+          : SizeConfig.screenWidth >= 1024
+              ? getProportionateScreenHeight(300)
+              : SizeConfig.screenWidth <= 768
+                  ? getProportionateScreenHeight(200)
+                  : getProportionateScreenHeight(500),
+      width: SizeConfig.screenWidth >= 1024
+          ? getProportionateScreenWidth(200)
+          : getProportionateScreenWidth(300),
       decoration: BoxDecoration(
         border: Border.all(
           width: 8,

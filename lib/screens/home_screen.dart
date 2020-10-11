@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:ui';
 
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:quiz_app/model/Student.dart';
 import 'package:quiz_app/pin_code_fields.dart';
@@ -60,6 +61,7 @@ class _HomeScreenState extends State<HomeScreen> {
     SizeConfig().init(context);
     return Scaffold(
       extendBodyBehindAppBar: true,
+      extendBody: true,
       appBar: CustomAppBar(
         secondsLeft: seconds,
         score: 320,
@@ -70,66 +72,125 @@ class _HomeScreenState extends State<HomeScreen> {
         decoration: BoxDecoration(
           gradient: kPrimaryGradientColor,
         ),
-        child: Row(
+        child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Column(
-              children: [
-                SizedBox(
-                  height: 80,
-                ),
-                BlurImage(
-                  url: students[0].imageUrl,
-                  sigmaX: 0,
-                  sigmaY: 0,
-                ),
-                SizedBox(
-                  height: getProportionateScreenHeight(5),
-                ),
-                buildImageCounter(),
-                SizedBox(
-                  height: SizeConfig.screenHeight * 0.05,
-                ),
-                buildBlankBox(context),
-                SizedBox(
-                  height: SizeConfig.screenHeight * 0.1,
-                ),
-                Container(
-                  width: getProportionateScreenWidth(350),
-                  child: Wrap(
-                    direction: Axis.horizontal,
-                    alignment: WrapAlignment.center,
-                    spacing: 10,
-                    runSpacing: 10,
-                    children: [
-                      ...List.generate(
-                          stringToArrayShuffled.values.toList().length,
-                          (index) {
-                        return buildAnswerInput(
-                          char: stringToArrayShuffled.values.toList()[index],
-                          press: () {
-                            setState(() {
-                              myController.text += stringToArrayShuffled.values
-                                  .toList()[index]
-                                  .toUpperCase();
-                              stringToArrayShuffled.update(
-                                stringToArrayShuffled.keys.toList()[index],
-                                (value) => "",
-                              );
-                            });
-                          },
-                        );
-                        // Text(
-                        //   students[0].name[index].toUpperCase(),
-                        // );
-                      })
-                    ],
+            Expanded(
+              flex: 5,
+              child: Column(
+                children: [
+                  Spacer(),
+                  BlurImage(
+                    url: students[0].imageUrl,
+                    sigmaX: 0,
+                    sigmaY: 0,
                   ),
-                ),
-              ],
+                  SizedBox(height: getProportionateScreenHeight(5)),
+                  buildImageCounter(),
+                  Spacer(),
+                  buildBlankBox(context),
+                  Spacer(),
+                ],
+              ),
+            ),
+            Expanded(
+              flex: 2,
+              child: Column(
+                children: [
+                  Spacer(),
+                  buildAnswerBox(),
+                  Spacer(
+                    flex: 5,
+                  ),
+                  buildBottomAction(),
+                  Spacer(),
+                ],
+              ),
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  Padding buildBottomAction() {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Container(
+        height: SizeConfig.screenWidth > 768
+            ? getProportionateScreenWidth(20)
+            : getProportionateScreenWidth(30),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            InkWell(
+              onTap: () {},
+              child: Container(
+                width: getProportionateScreenWidth(150),
+                height: getProportionateScreenWidth(30),
+                decoration: skipBoxDecoration,
+                child: Center(
+                  child: FittedBox(
+                    child: Text(
+                      'Submit'.toUpperCase(),
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            SizedBox(width: SizeConfig.screenWidth * 0.03),
+            GestureDetector(
+              onTap: () {},
+              child: Container(
+                width: getProportionateScreenWidth(30),
+                height: getProportionateScreenWidth(30),
+                decoration: clearBoxDecoration,
+                child: Center(
+                  child: Icon(
+                    Icons.arrow_back,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+
+  Container buildAnswerBox() {
+    return Container(
+      width: getProportionateScreenWidth(250),
+      child: Wrap(
+        direction: Axis.horizontal,
+        alignment: WrapAlignment.center,
+        spacing: 10,
+        runSpacing: 10,
+        children: [
+          ...List.generate(stringToArrayShuffled.values.toList().length,
+              (index) {
+            return buildAnswerInput(
+              char: stringToArrayShuffled.values.toList()[index],
+              press: () {
+                setState(() {
+                  myController.text += stringToArrayShuffled.values
+                      .toList()[index]
+                      .toUpperCase();
+                  stringToArrayShuffled.update(
+                    stringToArrayShuffled.keys.toList()[index],
+                    (value) => "",
+                  );
+                });
+              },
+            );
+          })
+        ],
       ),
     );
   }
@@ -138,25 +199,18 @@ class _HomeScreenState extends State<HomeScreen> {
     return GestureDetector(
       onTap: press,
       child: Container(
-        width: SizeConfig.screenWidth <= 768
-            ? (SizeConfig.screenWidth <= 425
-                ? getProportionateScreenWidth(35)
-                : getProportionateScreenWidth(20))
-            : getProportionateScreenWidth(15),
-        height: SizeConfig.screenWidth <= 768
-            ? (SizeConfig.screenWidth <= 425
-                ? getProportionateScreenWidth(35)
-                : getProportionateScreenWidth(20))
-            : getProportionateScreenWidth(15),
+        width: getProportionateScreenWidth(50),
+        height: getProportionateScreenHeight(35),
         decoration: char == "" ? emptyBoxDecoration : boxDecoration,
         child: Center(
-          child: Text(
+          child: AutoSizeText(
             char.toUpperCase(),
             style: TextStyle(
-                fontSize: 16, color: Colors.brown, fontWeight: FontWeight.w700),
+              fontSize: 24,
+              color: Colors.brown,
+              fontWeight: FontWeight.bold,
+            ),
             textAlign: TextAlign.center,
-            // decoration: inputDecoration,
-            // onChanged: (value) {},
           ),
         ),
       ),
@@ -165,27 +219,19 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Container buildBlankBox(BuildContext context) {
     return Container(
-      width: SizeConfig.screenWidth >= 768
-          ? getProportionateScreenWidth(250)
-          : getProportionateScreenWidth(350),
       child: PinCodeTextField(
         controller: myController,
         autoFocus: true,
         appContext: context,
         textStyle: TextStyle(
-            fontSize: 14, fontWeight: FontWeight.bold, color: Colors.brown),
+            fontSize: 24, fontWeight: FontWeight.bold, color: Colors.brown),
         backgroundColor: Colors.transparent,
         mainAxisAlignment: MainAxisAlignment.center,
         // enableActiveFill: true,
         pinTheme: PinTheme.defaults(
           shape: PinCodeFieldShape.box,
-          // inactiveColor: Colors.transparent,
-          fieldHeight: SizeConfig.screenWidth >= 768
-              ? getProportionateScreenHeight(30)
-              : getProportionateScreenHeight(25),
-          fieldWidth: SizeConfig.screenWidth >= 768
-              ? getProportionateScreenHeight(30)
-              : getProportionateScreenHeight(25),
+          fieldHeight: getProportionateScreenHeight(30),
+          fieldWidth: getProportionateScreenWidth(30),
           borderRadius: SizeConfig.screenWidth >= 768
               ? BorderRadius.circular(10)
               : BorderRadius.circular(5),
@@ -199,20 +245,14 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  // void hio(String myCon) {
-  //   String x = "aaabcd";
-  //   List<String> c = x.split(""); // ['a', 'a', 'a', 'b', 'c', 'd']
-  //   c.removeLast(); // ['a', 'a', 'a', 'b', 'c']
-  //   print(c.join()); //aaabc
-  // }
-
-  // myController.text += char.toUpperCase();
-
-  Text buildImageCounter() {
-    return Text(
+  AutoSizeText buildImageCounter() {
+    return AutoSizeText(
       '1/20',
       style: TextStyle(
-          color: Colors.white60, fontSize: 12, fontWeight: FontWeight.w800),
+        color: Colors.white60,
+        fontSize: 16,
+        fontWeight: FontWeight.bold,
+      ),
     );
   }
 }
