@@ -10,8 +10,18 @@ class Student {
 
 List<Student> students = [
   Student(
-    name: "Dhvani",
+    name: "Manisha",
     imageUrl:
-        "https://scontent.fbbi2-1.fna.fbcdn.net/v/t1.0-9/84329017_1575435725966584_7694492932224581632_o.jpg?_nc_cat=110&_nc_sid=174925&_nc_ohc=-pr9vQJGnEgAX9_zGiJ&_nc_ht=scontent.fbbi2-1.fna&oh=d78f6b3f9925b109804cfa95a97cc845&oe=5FA14889",
+        "https://scontent.fbbi3-1.fna.fbcdn.net/v/t1.0-9/36508114_655871551419122_7076708542924718080_n.jpg?_nc_cat=109&_nc_sid=174925&_nc_ohc=NouT_Dy0iAUAX96Y6-3&_nc_ht=scontent.fbbi3-1.fna&oh=f5ab147ac2ce880ff9fb044019d2be54&oe=5FA78C66",
+  ),
+  Student(
+    name: "Ipshita",
+    imageUrl:
+        "https://scontent.fbbi3-1.fna.fbcdn.net/v/t1.0-9/56168063_462387741167343_8247733901619888128_n.jpg?_nc_cat=103&_nc_sid=174925&_nc_ohc=zOdTzYJM5vsAX_opmr1&_nc_ht=scontent.fbbi3-1.fna&oh=47ce899ed743e74e3c82ab1ec8587d61&oe=5FAA5370",
+  ),
+  Student(
+    name: "Shreya",
+    imageUrl:
+        "https://scontent.fbbi3-1.fna.fbcdn.net/v/t1.0-9/15894891_1805246763053249_2414780267761957897_n.jpg?_nc_cat=101&_nc_sid=174925&_nc_ohc=DMBuopMkF30AX8cCmub&_nc_ht=scontent.fbbi3-1.fna&oh=e772ae8d51d27a2a4e3596cb4dfbd9ce&oe=5FA800EC",
   )
 ];

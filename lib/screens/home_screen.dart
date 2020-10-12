@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 import 'dart:ui';
 
 import 'package:auto_size_text/auto_size_text.dart';
@@ -18,31 +19,70 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   int seconds = 5;
+  int defaultSecond = 5;
   var myController = TextEditingController();
   Map<int, String> stringToArrayShuffled = {};
   Map<int, String> deletedLettersList = {};
-
-  bool _isVisible = true;
-
-  void showToast() {
-    setState(() {
-      _isVisible = !_isVisible;
-    });
-  }
+  Image _image;
+  int _index = 0;
+  Timer timer;
 
   @override
   void initState() {
-    new Timer.periodic(new Duration(seconds: 1), (time) {
-      if (seconds == 0) {
-        time.cancel();
-        return;
-      }
-      setState(() {
-        seconds--;
-      });
-    });
-    shuffleNameLetters(students[0].name);
+    students.shuffle();
+    newQuestion();
     super.initState();
+  }
+
+  void newQuestion() {
+    stringToArrayShuffled.clear();
+    deletedLettersList.clear();
+    myController.text = "";
+
+    _image = new Image.network(
+      students[_index].imageUrl,
+      fit: BoxFit.cover,
+      loadingBuilder: (BuildContext context, Widget child,
+          ImageChunkEvent loadingProgress) {
+        if (loadingProgress == null) return child;
+        return Center(
+          child: CircularProgressIndicator(
+            value: loadingProgress.expectedTotalBytes != null
+                ? loadingProgress.cumulativeBytesLoaded /
+                    loadingProgress.expectedTotalBytes
+                : null,
+          ),
+        );
+      },
+    );
+
+    startTimer();
+
+    shuffleNameLetters(students[_index].name);
+  }
+
+  void startTimer() {
+    _image.image.resolve(new ImageConfiguration()).addListener(
+      ImageStreamListener(
+        (info, call) {
+          timer = new Timer.periodic(new Duration(seconds: 1), (time) {
+            if (seconds == 0) {
+              time.cancel();
+              seconds = defaultSecond;
+              if (_index != students.length - 1)
+                setState(() {
+                  _index++;
+                  newQuestion();
+                });
+              return;
+            }
+            setState(() {
+              seconds--;
+            });
+          });
+        },
+      ),
+    );
   }
 
   void shuffleNameLetters(String name) {
@@ -82,9 +122,10 @@ class _HomeScreenState extends State<HomeScreen> {
                 children: [
                   Spacer(),
                   BlurImage(
-                    url: students[0].imageUrl,
-                    sigmaX: 0,
-                    sigmaY: 0,
+                    // url: students[0].imageUrl,
+                    image: _image,
+                    sigmaX: 3,
+                    sigmaY: 3,
                   ),
                   SizedBox(height: getProportionateScreenHeight(5)),
                   buildImageCounter(),
@@ -169,10 +210,25 @@ class _HomeScreenState extends State<HomeScreen> {
                 decoration: clearBoxDecoration,
                 child: Center(
                   child: FittedBox(
-                    child: Icon(
-                      Icons.arrow_back,
-                      color: Colors.white,
-                      size: 30,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        FittedBox(
+                          child: Icon(
+                            Icons.arrow_back,
+                            color: Colors.white,
+                            size: 30,
+                          ),
+                        ),
+                        Text(
+                          'Clear',
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ),
@@ -248,7 +304,10 @@ class _HomeScreenState extends State<HomeScreen> {
         autoFocus: true,
         appContext: context,
         textStyle: TextStyle(
-            fontSize: 24, fontWeight: FontWeight.bold, color: Colors.brown),
+          fontSize: 24,
+          fontWeight: FontWeight.bold,
+          color: Colors.brown,
+        ),
         backgroundColor: Colors.transparent,
         mainAxisAlignment: MainAxisAlignment.center,
         // enableActiveFill: true,
@@ -263,7 +322,7 @@ class _HomeScreenState extends State<HomeScreen> {
           inactiveColor: Colors.transparent,
           selectedColor: kPrimaryColor,
         ),
-        length: students[0].name.length,
+        length: students[_index].name.length,
         onChanged: null,
       ),
     );
@@ -271,7 +330,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   AutoSizeText buildImageCounter() {
     return AutoSizeText(
-      '1/20',
+      '${_index + 1}/20',
       style: TextStyle(
         color: Colors.white60,
         fontSize: 16,

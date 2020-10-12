@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 
 import '../../size_config.dart';
@@ -44,39 +45,36 @@ class CustomAppBar extends PreferredSize {
 
   Container buildScoreBorder() {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 5),
+      padding: EdgeInsets.symmetric(
+        horizontal: getProportionateScreenWidth(8),
+        vertical: getProportionateScreenHeight(5),
+      ),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(14),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.2),
-            spreadRadius: 5,
-            blurRadius: 7,
-            offset: Offset(0, 3),
-          ),
-        ],
+        // boxShadow: [
+        //   BoxShadow(
+        //     color: Colors.black.withOpacity(0.2),
+        //     spreadRadius: 5,
+        //     blurRadius: 7,
+        //     offset: Offset(0, 3),
+        //   ),
+        // ],
       ),
-      child: Row(
-        children: [
-          Text(
-            "Score: $score",
-            style: const TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-          const SizedBox(width: 5),
-          // WebsafeSvg.asset("assets/icons/Star Icon.svg"),
-        ],
+      child: Text(
+        "Score: $score",
+        style: const TextStyle(
+          fontSize: 12,
+          fontWeight: FontWeight.w600,
+        ),
       ),
     );
   }
 
   Container buildTimer(BuildContext context, int secondsLeft) {
     return Container(
-      height: 50,
-      width: 50,
+      height: getProportionateScreenHeight(40),
+      width: getProportionateScreenWidth(30),
       decoration: BoxDecoration(
         border: Border.all(
           color: Color(0xFF696969).withOpacity(0.5),
@@ -88,7 +86,7 @@ class CustomAppBar extends PreferredSize {
         ),
       ),
       child: Center(
-        child: Text(
+        child: AutoSizeText(
           secondsLeft.toString(),
           style: Theme.of(context).textTheme.headline6,
         ),

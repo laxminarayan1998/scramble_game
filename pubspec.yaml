@@ -31,6 +31,7 @@ dependencies:
   websafe_svg: ^1.1.4
   pin_code_fields: ^5.2.0 
   auto_size_text: ^2.1.0
+  cached_network_image: ^2.3.2+1
 
 dev_dependencies:
   flutter_test:
