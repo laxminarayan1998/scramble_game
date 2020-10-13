@@ -28,8 +28,9 @@ class _HomeScreenState extends State<HomeScreen> {
   Image _image;
   int _index;
   Timer timer;
-  final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   var questionState;
+  bool showAnswer;
 
   @override
   void initState() {
@@ -40,6 +41,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void newQuestion() {
+    showAnswer = false;
     questionState = "going";
     myController.clear();
     stringToArrayShuffled.clear();
@@ -66,15 +68,32 @@ class _HomeScreenState extends State<HomeScreen> {
     shuffleNameLetters(students[_index].name);
   }
 
-  void startTimer() {
+  Future<void> eveluateAnswer() async {
+    setState(() {
+      if (myController.text.toLowerCase() ==
+          students[_index].name.toLowerCase()) {
+        setState(() {
+          questionState = "correct";
+        });
+      } else {
+        setState(() {
+          questionState = "wrong";
+          showAnswer = true;
+        });
+      }
+    });
+    await new Future.delayed(const Duration(seconds: 5));
+  }
+
+  void startTimer() async {
     _image.image.resolve(new ImageConfiguration()).addListener(
       ImageStreamListener(
         (info, call) {
-          timer = new Timer.periodic(new Duration(seconds: 1), (time) {
+          timer = new Timer.periodic(new Duration(seconds: 1), (time) async {
             if (seconds == 0) {
               time.cancel();
-              if (myController.text.toLowerCase() ==
-                  students[_index].name.toLowerCase()) {}
+              await eveluateAnswer();
+
               seconds = defaultSecond;
               if (_index != students.length - 1)
                 setState(() {
@@ -108,12 +127,12 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     SizeConfig().init(context);
     return Scaffold(
-      key: scaffoldKey,
+      key: _scaffoldKey,
       extendBodyBehindAppBar: true,
-      extendBody: true,
+      // extendBody: true,
       appBar: CustomAppBar(secondsLeft: seconds, score: 320),
       body: AnimatedContainer(
-        duration: Duration (milliseconds: 300),
+        duration: Duration(milliseconds: 300),
         width: double.infinity,
         height: double.infinity,
         // color: Color(0xFFE3D659),
@@ -148,7 +167,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   Spacer(),
                   buildAnswerBox(),
                   Spacer(flex: 5),
-                  buildBottomAction(),
+                  if (!showAnswer) buildBottomAction(),
                   Spacer(),
                 ],
               ),
@@ -170,17 +189,16 @@ class _HomeScreenState extends State<HomeScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             SubmitButton(
-              press: () {
-                if (myController.text.toLowerCase() ==
-                    students[_index].name.toLowerCase()) {
-                  setState(() {
-                    questionState = "correct";
-                  });
-                  // timer.cancel();
+              press: () async {
+                if (myController.text.length == students[_index].name.length) {
+                  timer.cancel();
+                  await eveluateAnswer();
+                  _index++;
+                  seconds = defaultSecond;
+                  newQuestion();
                 } else {
-                  setState(() {
-                    questionState = "wrong";
-                  });
+                  _scaffoldKey.currentState.showSnackBar(new SnackBar(
+                      content: new Text('Complete your friend\'s name!')));
                 }
               },
             ),
@@ -212,38 +230,86 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Container buildAnswerBox() {
-    return Container(
-      width: getProportionateScreenWidth(250),
-      child: Wrap(
-        direction: Axis.horizontal,
-        alignment: WrapAlignment.center,
-        spacing: 10,
-        runSpacing: 10,
-        children: [
-          ...List.generate(stringToArrayShuffled.values.toList().length,
-              (index) {
-            return buildAnswerInput(
-              char: stringToArrayShuffled.values.toList()[index],
-              press: () {
-                setState(() {
-                  myController.text += stringToArrayShuffled.values
-                      .toList()[index]
-                      .toUpperCase();
-                  deletedLettersList.putIfAbsent(
-                    stringToArrayShuffled.keys.toList()[index],
-                    () => stringToArrayShuffled.values.toList()[index],
-                  );
-                  stringToArrayShuffled.update(
-                    stringToArrayShuffled.keys.toList()[index],
-                    (value) => "",
-                  );
-                });
-              },
-            );
-          })
-        ],
-      ),
-    );
+    if (!showAnswer)
+      return Container(
+        width: getProportionateScreenWidth(250),
+        child: Wrap(
+          direction: Axis.horizontal,
+          alignment: WrapAlignment.center,
+          spacing: 10,
+          runSpacing: 10,
+          children: [
+            ...List.generate(stringToArrayShuffled.values.toList().length,
+                (index) {
+              return buildAnswerInput(
+                char: stringToArrayShuffled.values.toList()[index],
+                press: () {
+                  setState(() {
+                    myController.text += stringToArrayShuffled.values
+                        .toList()[index]
+                        .toUpperCase();
+                    deletedLettersList.putIfAbsent(
+                      stringToArrayShuffled.keys.toList()[index],
+                      () => stringToArrayShuffled.values.toList()[index],
+                    );
+                    stringToArrayShuffled.update(
+                      stringToArrayShuffled.keys.toList()[index],
+                      (value) => "",
+                    );
+                  });
+                },
+              );
+            })
+          ],
+        ),
+      );
+    else {
+      return Container(
+        width: getProportionateScreenWidth(250),
+        child: Column(
+          children: [
+            Text(
+              '🥺',
+              style: TextStyle(
+                fontSize: 52,
+              ),
+            ),
+            Text(
+              'Opps! That\'s incorrect',
+              style: TextStyle(
+                fontWeight: FontWeight.w400,
+                color: Colors.white,
+                fontSize: 18,
+              ),
+            ),
+            Text(
+              'Correct Answer',
+              style: TextStyle(
+                fontWeight: FontWeight.w100,
+                color: Colors.white,
+                fontSize: 11,
+              ),
+            ),
+            Text(
+              students[_index].name.toUpperCase(),
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+                fontSize: 26,
+              ),
+            ),
+            TweenAnimationBuilder(
+              tween: Tween(begin: 5.0, end: 0),
+              duration: Duration(seconds: 5),
+              builder: (context, value, child) => Text(
+                "00:${value.toInt().toString().padLeft(2, '0')}",
+                style: TextStyle(color: kPrimaryColor),
+              ),
+            )
+          ],
+        ),
+      );
+    }
   }
 
   GestureDetector buildAnswerInput({String char, GestureTapCallback press}) {
