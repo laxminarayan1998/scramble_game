@@ -1,15 +1,17 @@
 import 'dart:async';
-import 'dart:math';
 import 'dart:ui';
 
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:quiz_app/model/Student.dart';
-import 'package:quiz_app/pin_code_fields.dart';
+// import 'package:quiz_app/pin_code_fields.dart';
 import 'package:quiz_app/size_config.dart';
+import 'package:quiz_app/src/pin_code_text_field.dart';
 
 import '../constants.dart';
+import 'components/SubmitButton.dart';
 import 'components/blur_image.dart';
+import 'components/clear_btn.dart';
 import 'components/custom_app_bar.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -18,26 +20,30 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  int seconds = 5;
-  int defaultSecond = 5;
+  int seconds = 10;
+  int defaultSecond = 10;
   var myController = TextEditingController();
   Map<int, String> stringToArrayShuffled = {};
   Map<int, String> deletedLettersList = {};
   Image _image;
-  int _index = 0;
+  int _index;
   Timer timer;
+  final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
+  var questionState;
 
   @override
   void initState() {
-    students.shuffle();
+    // students.shuffle();
+    _index = 0;
     newQuestion();
     super.initState();
   }
 
   void newQuestion() {
+    questionState = "going";
+    myController.clear();
     stringToArrayShuffled.clear();
     deletedLettersList.clear();
-    myController.text = "";
 
     _image = new Image.network(
       students[_index].imageUrl,
@@ -57,7 +63,6 @@ class _HomeScreenState extends State<HomeScreen> {
     );
 
     startTimer();
-
     shuffleNameLetters(students[_index].name);
   }
 
@@ -68,6 +73,8 @@ class _HomeScreenState extends State<HomeScreen> {
           timer = new Timer.periodic(new Duration(seconds: 1), (time) {
             if (seconds == 0) {
               time.cancel();
+              if (myController.text.toLowerCase() ==
+                  students[_index].name.toLowerCase()) {}
               seconds = defaultSecond;
               if (_index != students.length - 1)
                 setState(() {
@@ -101,17 +108,21 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     SizeConfig().init(context);
     return Scaffold(
+      key: scaffoldKey,
       extendBodyBehindAppBar: true,
       extendBody: true,
-      appBar: CustomAppBar(
-        secondsLeft: seconds,
-        score: 320,
-      ),
-      body: Container(
+      appBar: CustomAppBar(secondsLeft: seconds, score: 320),
+      body: AnimatedContainer(
+        duration: Duration (milliseconds: 300),
         width: double.infinity,
         height: double.infinity,
+        // color: Color(0xFFE3D659),
         decoration: BoxDecoration(
-          gradient: kPrimaryGradientColor,
+          gradient: questionState == "going"
+              ? kPrimaryGoingGradientColor
+              : (questionState == "correct"
+                  ? kPrimaryGradientColor
+                  : kPrimaryWrongGradientColor),
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -121,12 +132,7 @@ class _HomeScreenState extends State<HomeScreen> {
               child: Column(
                 children: [
                   Spacer(),
-                  BlurImage(
-                    // url: students[0].imageUrl,
-                    image: _image,
-                    sigmaX: 3,
-                    sigmaY: 3,
-                  ),
+                  BlurImage(image: _image, sigmaX: 3, sigmaY: 3),
                   SizedBox(height: getProportionateScreenHeight(5)),
                   buildImageCounter(),
                   Spacer(),
@@ -141,9 +147,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 children: [
                   Spacer(),
                   buildAnswerBox(),
-                  Spacer(
-                    flex: 5,
-                  ),
+                  Spacer(flex: 5),
                   buildBottomAction(),
                   Spacer(),
                 ],
@@ -165,36 +169,32 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            InkWell(
-              onTap: () {},
-              child: Container(
-                width: getProportionateScreenWidth(250),
-                height: getProportionateScreenWidth(30),
-                decoration: skipBoxDecoration,
-                child: Center(
-                  child: FittedBox(
-                    child: Text(
-                      'Submit'.toUpperCase(),
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 14,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
+            SubmitButton(
+              press: () {
+                if (myController.text.toLowerCase() ==
+                    students[_index].name.toLowerCase()) {
+                  setState(() {
+                    questionState = "correct";
+                  });
+                  // timer.cancel();
+                } else {
+                  setState(() {
+                    questionState = "wrong";
+                  });
+                }
+              },
             ),
             SizedBox(width: SizeConfig.screenWidth * 0.03),
-            InkWell(
-              onTap: () {
+            ClearButton(
+              press: () {
                 if (deletedLettersList.length != 0)
                   setState(() {
                     stringToArrayShuffled.update(
-                        deletedLettersList.keys
-                            .toList()[deletedLettersList.length - 1],
-                        (value) => deletedLettersList.values
-                            .toList()[deletedLettersList.length - 1]);
+                      deletedLettersList.keys
+                          .toList()[deletedLettersList.length - 1],
+                      (value) => deletedLettersList.values
+                          .toList()[deletedLettersList.length - 1],
+                    );
 
                     deletedLettersList.remove(deletedLettersList.keys
                         .toList()[deletedLettersList.length - 1]);
@@ -204,35 +204,6 @@ class _HomeScreenState extends State<HomeScreen> {
                     myController.text = c.join();
                   });
               },
-              child: Container(
-                width: getProportionateScreenWidth(30),
-                height: getProportionateScreenWidth(30),
-                decoration: clearBoxDecoration,
-                child: Center(
-                  child: FittedBox(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        FittedBox(
-                          child: Icon(
-                            Icons.arrow_back,
-                            color: Colors.white,
-                            size: 30,
-                          ),
-                        ),
-                        Text(
-                          'Clear',
-                          style: TextStyle(
-                            fontSize: 16,
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
             )
           ],
         ),
@@ -300,30 +271,26 @@ class _HomeScreenState extends State<HomeScreen> {
   Container buildBlankBox(BuildContext context) {
     return Container(
       child: PinCodeTextField(
+        maxLength: students[_index].name.length,
+        autofocus: true,
         controller: myController,
-        autoFocus: true,
-        appContext: context,
-        textStyle: TextStyle(
-          fontSize: 24,
+        pinBoxRadius: 5,
+        pinBoxHeight: getProportionateScreenHeight(30),
+        pinBoxWidth: getProportionateScreenWidth(30),
+        hasTextBorderColor: kPrimaryColor,
+        defaultBorderColor: Colors.transparent,
+        pinBoxColor: Colors.black45,
+        pinTextStyle: TextStyle(
+          fontSize: 16,
           fontWeight: FontWeight.bold,
-          color: Colors.brown,
+          color: Colors.white70,
         ),
-        backgroundColor: Colors.transparent,
-        mainAxisAlignment: MainAxisAlignment.center,
-        // enableActiveFill: true,
-        pinTheme: PinTheme.defaults(
-          shape: PinCodeFieldShape.box,
-          fieldHeight: getProportionateScreenHeight(30),
-          fieldWidth: getProportionateScreenWidth(30),
-          borderRadius: SizeConfig.screenWidth >= 768
-              ? BorderRadius.circular(10)
-              : BorderRadius.circular(5),
-          activeColor: kPrimaryColor,
-          inactiveColor: Colors.transparent,
-          selectedColor: kPrimaryColor,
-        ),
-        length: students[_index].name.length,
-        onChanged: null,
+        highlightPinBoxColor: Colors.white12,
+        pinTextAnimatedSwitcherTransition:
+            ProvidedPinBoxTextAnimation.slideTransition,
+        pinTextAnimatedSwitcherDuration: Duration(milliseconds: 300),
+        highlightAnimationBeginColor: Colors.black,
+        highlightAnimationEndColor: Colors.white12,
       ),
     );
   }
@@ -332,8 +299,8 @@ class _HomeScreenState extends State<HomeScreen> {
     return AutoSizeText(
       '${_index + 1}/20',
       style: TextStyle(
-        color: Colors.white60,
-        fontSize: 16,
+        color: Colors.white70,
+        fontSize: 12,
         fontWeight: FontWeight.bold,
       ),
     );

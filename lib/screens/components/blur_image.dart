@@ -34,17 +34,9 @@ class BlurImage extends StatelessWidget {
                 : getProportionateScreenWidth(300),
             decoration: BoxDecoration(
               border: Border.all(
-                width: 8,
+                width: 2,
                 color: Colors.white,
               ),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.2),
-                  spreadRadius: 5,
-                  blurRadius: 7,
-                  offset: Offset(0, 3),
-                ),
-              ],
             ),
             child: image,
           ),
@@ -57,6 +49,32 @@ class BlurImage extends StatelessWidget {
               child: Container(
                 color: Colors.black.withOpacity(0),
               ),
+            ),
+          ),
+          Container(
+            height: SizeConfig.screenWidth <= 425
+                ? getProportionateScreenHeight(300)
+                : SizeConfig.screenWidth >= 1024
+                    ? getProportionateScreenHeight(300)
+                    : SizeConfig.screenWidth <= 768
+                        ? getProportionateScreenHeight(200)
+                        : getProportionateScreenHeight(500),
+            width: SizeConfig.screenWidth >= 1024
+                ? getProportionateScreenWidth(200)
+                : getProportionateScreenWidth(300),
+            decoration: BoxDecoration(
+              border: Border.all(
+                width: 8,
+                color: Colors.white,
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.2),
+                  spreadRadius: 5,
+                  blurRadius: 7,
+                  offset: Offset(0, 3),
+                ),
+              ],
             ),
           )
         ],

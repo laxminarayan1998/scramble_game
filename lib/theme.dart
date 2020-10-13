@@ -2,17 +2,14 @@ import 'package:flutter/material.dart';
 
 import 'constants.dart';
 
-// Our light/Primary Theme
 ThemeData themeData(BuildContext context) {
   return ThemeData(
     appBarTheme: appBarTheme,
     primaryColor: kPrimaryColor,
     accentColor: Colors.black,
     fontFamily: "Muli",
-    // scaffoldBackgroundColor: kSecondaryGradientColor,
     colorScheme: ColorScheme.light(
       secondary: kSecondaryColor,
-      // on light theme surface = Colors.white by default
     ),
     backgroundColor: Colors.white,
   );

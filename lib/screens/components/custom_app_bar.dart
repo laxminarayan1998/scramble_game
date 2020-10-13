@@ -73,7 +73,7 @@ class CustomAppBar extends PreferredSize {
 
   Container buildTimer(BuildContext context, int secondsLeft) {
     return Container(
-      height: getProportionateScreenHeight(40),
+      height: getProportionateScreenWidth(30),
       width: getProportionateScreenWidth(30),
       decoration: BoxDecoration(
         border: Border.all(

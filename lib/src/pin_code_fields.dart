@@ -200,6 +200,7 @@ class _PinCodeTextFieldState extends State<PinCodeTextField>
           negativeText: widget.dialogConfig.negativeText);
   PinTheme get _pinTheme => widget.pinTheme ?? PinTheme();
 
+
   @override
   void initState() {
     // if (!kReleaseMode) {
@@ -247,6 +248,8 @@ class _PinCodeTextFieldState extends State<PinCodeTextField>
     }
     super.initState();
   }
+
+  
 
   // validating all the values
   void _checkForInvalidValues() {
@@ -548,7 +551,7 @@ class _PinCodeTextFieldState extends State<PinCodeTextField>
           decoration: BoxDecoration(
             color: widget.enableActiveFill
                 ? _getFillColorFromIndex(i)
-                : Colors.white60,
+                : Colors.black87.withOpacity(.4),
             shape: _pinTheme.shape == PinCodeFieldShape.circle
                 ? BoxShape.circle
                 : BoxShape.rectangle,

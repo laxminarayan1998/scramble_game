@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-import 'size_config.dart';
-
 const kPrimaryColor = Color(0xFFE3D659);
 const kPrimaryLightColor = Color(0xFF056802);
 // const kPrimaryGradientColor = LinearGradient(
@@ -16,6 +14,24 @@ const kPrimaryGradientColor = LinearGradient(
   colors: <Color>[
     Color(0xFFE3D659),
     Color(0xFF056802),
+  ],
+);
+
+const kPrimaryGoingGradientColor = LinearGradient(
+  begin: Alignment.topCenter,
+  end: Alignment.bottomCenter,
+  colors: <Color>[
+    Color(0xFFE3D659),
+    Color(0xFF685A02),
+  ],
+);
+
+const kPrimaryWrongGradientColor = LinearGradient(
+  begin: Alignment.topCenter,
+  end: Alignment.bottomCenter,
+  colors: <Color>[
+    Color(0xFFE3D659),
+    Color(0xFF680202),
   ],
 );
 const kSecondaryColor = Color(0xFF979797);
@@ -39,10 +55,10 @@ final boxDecoration = BoxDecoration(
   borderRadius: BorderRadius.circular(10),
 );
 
-final skipBoxDecoration = BoxDecoration(
+final submitBoxDecoration = BoxDecoration(
   color: Color(0xFFB71616),
   border: Border.all(
-    color: Colors.white,
+    color: Colors.white54,
     width: 1.5,
   ),
   borderRadius: BorderRadius.circular(5),
@@ -51,7 +67,7 @@ final skipBoxDecoration = BoxDecoration(
 final clearBoxDecoration = BoxDecoration(
   color: Colors.blue,
   border: Border.all(
-    color: Colors.white,
+    color: Colors.white54,
     width: 1.5,
   ),
   borderRadius: BorderRadius.circular(5),
