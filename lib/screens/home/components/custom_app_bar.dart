@@ -1,7 +1,8 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 
-import '../../size_config.dart';
+import '../../../size_config.dart';
+
 
 class CustomAppBar extends PreferredSize {
   final int secondsLeft;

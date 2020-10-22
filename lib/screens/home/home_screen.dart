@@ -4,17 +4,17 @@ import 'dart:ui';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:quiz_app/model/Student.dart';
-// import 'package:quiz_app/pin_code_fields.dart';
 import 'package:quiz_app/size_config.dart';
-import 'package:quiz_app/src/pin_code_text_field.dart';
 
-import '../constants.dart';
+import '../../constants.dart';
+import '../../pin_code_text_field.dart';
 import 'components/SubmitButton.dart';
 import 'components/blur_image.dart';
 import 'components/clear_btn.dart';
 import 'components/custom_app_bar.dart';
 
 class HomeScreen extends StatefulWidget {
+  static String routeName = "/home-screen";
   @override
   _HomeScreenState createState() => _HomeScreenState();
 }
@@ -31,16 +31,18 @@ class _HomeScreenState extends State<HomeScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   var questionState;
   bool showAnswer;
+  bool blockActionButton;
 
   @override
   void initState() {
-    // students.shuffle();
+    students.shuffle();
     _index = 0;
     newQuestion();
     super.initState();
   }
 
   void newQuestion() {
+    blockActionButton = false;
     showAnswer = false;
     questionState = "going";
     myController.clear();
@@ -69,19 +71,17 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future<void> eveluateAnswer() async {
-    setState(() {
-      if (myController.text.toLowerCase() ==
-          students[_index].name.toLowerCase()) {
-        setState(() {
-          questionState = "correct";
-        });
-      } else {
-        setState(() {
-          questionState = "wrong";
-          showAnswer = true;
-        });
-      }
-    });
+    if (myController.text.toLowerCase() ==
+        students[_index].name.toLowerCase()) {
+      setState(() {
+        questionState = "correct";
+      });
+    } else {
+      setState(() {
+        questionState = "wrong";
+        showAnswer = true;
+      });
+    }
     await new Future.delayed(const Duration(seconds: 5));
   }
 
@@ -151,7 +151,11 @@ class _HomeScreenState extends State<HomeScreen> {
               child: Column(
                 children: [
                   Spacer(),
-                  BlurImage(image: _image, sigmaX: 3, sigmaY: 3),
+                  BlurImage(
+                    image: _image,
+                    sigmaX: questionState == "going" ? 3 : 0,
+                    sigmaY: questionState == "going" ? 3 : 0,
+                  ),
                   SizedBox(height: getProportionateScreenHeight(5)),
                   buildImageCounter(),
                   Spacer(),
@@ -167,7 +171,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   Spacer(),
                   buildAnswerBox(),
                   Spacer(flex: 5),
-                  if (!showAnswer) buildBottomAction(),
+                  if (!blockActionButton)
+                    if (!showAnswer) buildBottomAction(),
                   Spacer(),
                 ],
               ),
@@ -191,11 +196,14 @@ class _HomeScreenState extends State<HomeScreen> {
             SubmitButton(
               press: () async {
                 if (myController.text.length == students[_index].name.length) {
+                  blockActionButton = true;
                   timer.cancel();
                   await eveluateAnswer();
-                  _index++;
-                  seconds = defaultSecond;
-                  newQuestion();
+                  if (_index != students.length - 1) {
+                    _index++;
+                    seconds = defaultSecond;
+                    newQuestion();
+                  }
                 } else {
                   _scaffoldKey.currentState.showSnackBar(new SnackBar(
                       content: new Text('Complete your friend\'s name!')));
@@ -230,6 +238,12 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Container buildAnswerBox() {
+    if (questionState == "correct")
+      return buildEvalutionContainer(
+        comment: 'That\'s Correct, You remember\n${students[_index].name}',
+        emoji: '💃',
+        correctName: students[_index].name,
+      );
     if (!showAnswer)
       return Container(
         width: getProportionateScreenWidth(250),
@@ -264,24 +278,36 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       );
     else {
-      return Container(
-        width: getProportionateScreenWidth(250),
-        child: Column(
-          children: [
-            Text(
-              '🥺',
-              style: TextStyle(
-                fontSize: 52,
-              ),
+      return buildEvalutionContainer(
+        comment: 'Opps! That\'s incorrect',
+        emoji: '🥺',
+        correctName: students[_index].name,
+      );
+    }
+  }
+
+  Container buildEvalutionContainer(
+      {String comment, String emoji, String correctName}) {
+    return Container(
+      width: getProportionateScreenWidth(250),
+      child: Column(
+        children: [
+          Text(
+            emoji,
+            style: TextStyle(
+              fontSize: 52,
             ),
-            Text(
-              'Opps! That\'s incorrect',
-              style: TextStyle(
-                fontWeight: FontWeight.w400,
-                color: Colors.white,
-                fontSize: 18,
-              ),
+          ),
+          Text(
+            comment,
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontWeight: FontWeight.w400,
+              color: Colors.white,
+              fontSize: 18,
             ),
+          ),
+          if (questionState != "correct")
             Text(
               'Correct Answer',
               style: TextStyle(
@@ -290,26 +316,28 @@ class _HomeScreenState extends State<HomeScreen> {
                 fontSize: 11,
               ),
             ),
+          if (questionState != "correct")
             Text(
-              students[_index].name.toUpperCase(),
+              correctName.toUpperCase(),
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 color: Colors.white,
                 fontSize: 26,
               ),
             ),
-            TweenAnimationBuilder(
-              tween: Tween(begin: 5.0, end: 0),
-              duration: Duration(seconds: 5),
-              builder: (context, value, child) => Text(
-                "00:${value.toInt().toString().padLeft(2, '0')}",
-                style: TextStyle(color: kPrimaryColor),
-              ),
-            )
-          ],
-        ),
-      );
-    }
+          if (questionState == "correct")
+            SizedBox(height: SizeConfig.screenHeight * 0.03),
+          TweenAnimationBuilder(
+            tween: Tween(begin: 5.0, end: 0),
+            duration: Duration(seconds: 5),
+            builder: (context, value, child) => Text(
+              "00:${value.toInt().toString().padLeft(2, '0')}",
+              style: TextStyle(color: kPrimaryColor),
+            ),
+          )
+        ],
+      ),
+    );
   }
 
   GestureDetector buildAnswerInput({String char, GestureTapCallback press}) {
@@ -363,7 +391,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   AutoSizeText buildImageCounter() {
     return AutoSizeText(
-      '${_index + 1}/20',
+      '${_index + 1} / ${students.length}',
       style: TextStyle(
         color: Colors.white70,
         fontSize: 12,
