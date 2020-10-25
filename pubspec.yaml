@@ -32,7 +32,8 @@ dependencies:
   pin_code_fields: ^5.2.0 
   auto_size_text: ^2.1.0
   cached_network_image: ^2.3.2+1
-  provider: ^4.3.2+2
+  autocomplete_textfield: ^1.7.3
+  http: ^0.12.2
 
 dev_dependencies:
   flutter_test:

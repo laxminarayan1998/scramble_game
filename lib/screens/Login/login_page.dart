@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:quiz_app/default_button.dart';
+import 'package:quiz_app/screens/registration_no/registration_screen.dart';
 
 import '../../constants.dart';
 import '../../size_config.dart';
@@ -56,7 +57,7 @@ class LoginPage extends StatelessWidget {
                         icon: Icons.assignment,
                         title: 'Give it your best shot',
                         description:
-                            'Submit the answer you think is correct n 20 scond;\nthere\'s no penalty for incorrect answers.',
+                            'Submit the answer you think is correct in 20 scond;\nthere\'s no penalty for incorrect answers.',
                         textDirection: TextDirection.rtl,
                       ),
                       InstructionCard(
@@ -79,7 +80,9 @@ class LoginPage extends StatelessWidget {
                             vertical: getProportionateScreenHeight(10)),
                         child: DefaultButton(
                           text: 'Continue',
-                          press: () {},
+                          press: () {
+                            Navigator.pushNamed(context, RegistrationScreen.routeName);
+                          },
                         ),
                       ),
                     ],
