@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:math';
 
-import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 class Student {
@@ -44,7 +43,8 @@ List<Student> students = [];
 //   )
 // ];
 
-Future<void> suggestions() async {
+Future<void> getStudentsData() async {
+  students.clear();
   var url =
       'https://raw.githubusercontent.com/laxminarayan1998/oec2017-2021_api/master/oec.json';
 
@@ -54,12 +54,11 @@ Future<void> suggestions() async {
 
     final _random = new Random();
 
-    for (int i = 0; i <= 5; i++) {
+    for (int i = 0; i <= 1; i++) {
       int keysIndex = _random.nextInt(extractedData.keys.length);
 
       List extractDataValues =
           extractedData.values.elementAt(keysIndex).toList();
-          print(extractedData.length);
 
       int valuesIndex = _random.nextInt(extractDataValues.length);
 
@@ -69,7 +68,6 @@ Future<void> suggestions() async {
             imageUrl: extractDataValues[valuesIndex]['imageUrl']),
       );
       extractedData.remove(extractedData.keys.elementAt(keysIndex));
-      print(extractedData.length);
     }
   } catch (error) {
     print(error.toString());

@@ -1,8 +1,8 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:quiz_app/screens/registration_no/registration_screen.dart';
 
 import '../../../size_config.dart';
-
 
 class CustomAppBar extends PreferredSize {
   final int secondsLeft;
@@ -32,7 +32,7 @@ class CustomAppBar extends PreferredSize {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              buildCloseBtn(),
+              buildCloseBtn(context),
               // Spacer(),
               buildTimer(context, secondsLeft),
               // Spacer(),
@@ -95,15 +95,91 @@ class CustomAppBar extends PreferredSize {
     );
   }
 
-  SizedBox buildCloseBtn() {
+  SizedBox buildCloseBtn(BuildContext context) {
     return SizedBox(
       height: 50,
       width: 50,
       child: FlatButton(
         padding: EdgeInsets.zero,
-        onPressed: () {},
+        onPressed: () async {
+          await showAlertDialog(context);
+        },
         child: Icon(Icons.close),
       ),
     );
   }
+}
+
+showAlertDialog(BuildContext context) async {
+  Widget okButton = FlatButton(
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(18.0),
+      side: BorderSide(
+        color: Color(0xFFFF3535),
+      ),
+    ),
+    child: Text("OK"),
+    onPressed: () {
+      Navigator.pushNamed(context, RegistrationScreen.routeName);
+    },
+  );
+
+  AlertDialog alert = AlertDialog(
+    title: Center(
+      child: Text(
+        "💔",
+        style: TextStyle(fontSize: 49),
+      ),
+    ),
+    content: Container(
+      height: 100,
+      child: Column(
+        children: [
+          Text(
+            "Are you sure you want to leave?",
+            style: TextStyle(fontSize: 20),
+          ),
+          SizedBox(height: 20),
+          Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: <Widget>[
+                FlatButton(
+                  color: Color(0xFFDEDEDE),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(18.0),
+                  ),
+                  child: Text("No"),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+                FlatButton(
+                  
+                  color: Color(0xFFFF3535),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(18.0),
+                  ),
+                  child: Text(
+                    "Yes",
+                    style: TextStyle(color: Color(0xFFFFFFFF)),
+                  ),
+                  onPressed: () {
+                    Navigator.pushNamed(context, RegistrationScreen.routeName);
+                  },
+                )
+              ])
+        ],
+      ),
+    ),
+    // actions: [
+    //   okButton,
+    // ],
+  );
+
+  await showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return alert;
+    },
+  );
 }

@@ -1,9 +1,11 @@
 import 'dart:async';
+
 import 'dart:ui';
 
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:quiz_app/model/Student.dart';
+import 'package:quiz_app/screens/result_page/result_page.dart';
 import 'package:quiz_app/size_config.dart';
 
 import '../../constants.dart';
@@ -20,9 +22,10 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  int seconds = 10;
-  int defaultSecond = 10;
+  int seconds = 20;
+  int defaultSecond = 20;
   var myController = TextEditingController();
+  int score = 0;
   Map<int, String> stringToArrayShuffled = {};
   Map<int, String> deletedLettersList = {};
   Image _image;
@@ -32,6 +35,8 @@ class _HomeScreenState extends State<HomeScreen> {
   var questionState;
   bool showAnswer;
   bool blockActionButton;
+  bool showAnswerTileAfterImageLoad = false;
+  String regdNo;
 
   @override
   void initState() {
@@ -39,6 +44,12 @@ class _HomeScreenState extends State<HomeScreen> {
     _index = 0;
     newQuestion();
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    timer.cancel();
+    super.dispose();
   }
 
   void newQuestion() {
@@ -75,6 +86,7 @@ class _HomeScreenState extends State<HomeScreen> {
         students[_index].name.toLowerCase()) {
       setState(() {
         questionState = "correct";
+        score += 200 + seconds;
       });
     } else {
       setState(() {
@@ -83,14 +95,25 @@ class _HomeScreenState extends State<HomeScreen> {
       });
     }
     await new Future.delayed(const Duration(seconds: 5));
+
+    if (_index + 1 == students.length) {
+      Navigator.of(context).pushNamed(
+        ResultPage.routeName,
+        arguments: {'regdNo': regdNo, 'score': score},
+      );
+    }
   }
 
   void startTimer() async {
     _image.image.resolve(new ImageConfiguration()).addListener(
       ImageStreamListener(
         (info, call) {
+          setState(() {
+            showAnswerTileAfterImageLoad = true;
+          });
           timer = new Timer.periodic(new Duration(seconds: 1), (time) async {
             if (seconds == 0) {
+              blockActionButton = true;
               time.cancel();
               await eveluateAnswer();
 
@@ -125,17 +148,16 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    regdNo = ModalRoute.of(context).settings.arguments as String;
     SizeConfig().init(context);
     return Scaffold(
       key: _scaffoldKey,
       extendBodyBehindAppBar: true,
-      // extendBody: true,
-      appBar: CustomAppBar(secondsLeft: seconds, score: 320),
+      appBar: CustomAppBar(secondsLeft: seconds, score: score),
       body: AnimatedContainer(
         duration: Duration(milliseconds: 300),
         width: double.infinity,
         height: double.infinity,
-        // color: Color(0xFFE3D659),
         decoration: BoxDecoration(
           gradient: questionState == "going"
               ? kPrimaryGoingGradientColor
@@ -169,7 +191,7 @@ class _HomeScreenState extends State<HomeScreen> {
               child: Column(
                 children: [
                   Spacer(),
-                  buildAnswerBox(),
+                  showAnswerTileAfterImageLoad ? buildAnswerBox() : Container(),
                   Spacer(flex: 5),
                   if (!blockActionButton)
                     if (!showAnswer) buildBottomAction(),
