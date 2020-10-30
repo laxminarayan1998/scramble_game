@@ -54,7 +54,7 @@ Future<void> getStudentsData() async {
 
     final _random = new Random();
 
-    for (int i = 0; i <= 1; i++) {
+    for (int i = 0; i <= 9; i++) {
       int keysIndex = _random.nextInt(extractedData.keys.length);
 
       List extractDataValues =

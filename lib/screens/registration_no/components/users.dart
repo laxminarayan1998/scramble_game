@@ -25,6 +25,7 @@ List<User> usersByPoints = [];
 
 Future<void> getScoreBoardList() async {
   users.clear();
+  usersByPoints.clear();
   var url = 'https://oecgame-4c5b7.firebaseio.com/scoreList.json';
 
   try {
