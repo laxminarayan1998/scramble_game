@@ -15,13 +15,15 @@ class ResultPage extends StatelessWidget {
     final String name =
         users.firstWhere((element) => element.id == data['regdNo']).name;
 
-    var url = 'https://oecgame-4c5b7.firebaseio.com/scoreList/${data['regdNo']}.json';
+    var url =
+        'https://oecgame-4c5b7.firebaseio.com/scoreList/${data['regdNo']}.json';
     try {
-       http.patch(
+      http.patch(
         url,
         body: json.encode(
           {
             'points': data['score'],
+            'isPlayed': true
           },
         ),
       );
@@ -109,6 +111,13 @@ class ResultPage extends StatelessWidget {
                   )
                 ],
               ),
+            ),
+            SizedBox(
+              height: getProportionateScreenHeight(32),
+            ),
+            Text(
+              'Note: Still some photos of our friends are not available\nin our database due to unavailable in social media.',
+              textAlign: TextAlign.center,
             ),
           ],
         ),

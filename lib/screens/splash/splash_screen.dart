@@ -33,8 +33,14 @@ class _SplashScreenState extends State<SplashScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            Spacer(),
             SplashImage(imagePath: imagePath),
             SplashSubTitle(),
+            Spacer(),
+            Image.asset(
+              'assets/icons/nryn.png',
+              scale: 5,
+            ),
           ],
         ),
       ),

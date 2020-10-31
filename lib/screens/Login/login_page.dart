@@ -57,14 +57,14 @@ class LoginPage extends StatelessWidget {
                         icon: Icons.assignment,
                         title: 'Give it your best shot',
                         description:
-                            'Submit the answer you think is correct in 20 scond;\nthere\'s no penalty for incorrect answers.',
+                            'Submit the answer you think is correct in 20 seconds;\nthere\'s no penalty for incorrect answers.',
                         textDirection: TextDirection.rtl,
                       ),
                       InstructionCard(
                         icon: Icons.alarm_add,
                         title: 'Answer qickly for time bonus.',
                         description:
-                            'Submit the answer as fast as you can to earn a\nhigher time bonus for every correct answer,\nplayers with heighestscores win the game.',
+                            'Submit the answer as fast as you can to earn a\nhigher time bonus for every correct answer,\nplayers with heighest scores win the game.',
                         textDirection: TextDirection.ltr,
                       )
                     ],

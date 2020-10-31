@@ -151,6 +151,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
       width: SizeConfig.screenWidth * 0.7,
       child: searchTextField = AutoCompleteTextField<User>(
         controller: searchIdText,
+        keyboardType: TextInputType.number,
         decoration: InputDecoration(
           // errorText: isUserNameValidate ? 'Please enter a Username' : null,
           hintText: "e.g, 1701211###",
