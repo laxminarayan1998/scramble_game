@@ -14,7 +14,6 @@ class LoginPage extends StatelessWidget {
     return Scaffold(
       body: Container(
         width: double.infinity,
-        // height: 100,
         decoration: BoxDecoration(gradient: kPrimaryGoingGradientColor),
         child: Padding(
           padding: EdgeInsets.all(16),
@@ -43,50 +42,41 @@ class LoginPage extends StatelessWidget {
                   height: SizeConfig.screenHeight * 0.08,
                 ),
                 Expanded(
-                  flex: 3,
-                  child: Column(
-                    children: [
-                      InstructionCard(
-                        icon: Icons.photo,
-                        title: 'Guess your friend image',
-                        description:
-                            'Use the given characters to form the\nword that represents the image.',
-                        textDirection: TextDirection.ltr,
-                      ),
-                      InstructionCard(
-                        icon: Icons.assignment,
-                        title: 'Give it your best shot',
-                        description:
-                            'Submit the answer you think is correct in 20 seconds;\nthere\'s no penalty for incorrect answers.',
-                        textDirection: TextDirection.rtl,
-                      ),
-                      InstructionCard(
-                        icon: Icons.alarm_add,
-                        title: 'Answer qickly for time bonus.',
-                        description:
-                            'Submit the answer as fast as you can to earn a\nhigher time bonus for every correct answer,\nplayers with heighest scores win the game.',
-                        textDirection: TextDirection.ltr,
-                      )
-                    ],
+                  // flex: 3,
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        InstructionCard(
+                          icon: Icons.photo,
+                          title: 'Guess your friend image',
+                          description:
+                              'Use the given characters to form the\nword that represents the image.',
+                          textDirection: TextDirection.ltr,
+                        ),
+                        InstructionCard(
+                          icon: Icons.assignment,
+                          title: 'Give it your best shot',
+                          description:
+                              'Submit the answer you think is correct in 20 seconds;\nthere\'s no penalty for incorrect answers.',
+                          textDirection: TextDirection.rtl,
+                        ),
+                        InstructionCard(
+                          icon: Icons.alarm_add,
+                          title: 'Answer qickly for time bonus.',
+                          description:
+                              'Submit the answer as fast as you can to earn a\nhigher time bonus for every correct answer,\nplayers with heighest scores win the game.',
+                          textDirection: TextDirection.ltr,
+                        )
+                      ],
+                    ),
                   ),
                 ),
-                Expanded(
-                  child: Column(
-                    children: [
-                      // Spacer(),
-                      Padding(
-                        padding: EdgeInsets.symmetric(
-                            horizontal: getProportionateScreenWidth(30),
-                            vertical: getProportionateScreenHeight(10)),
-                        child: DefaultButton(
-                          text: 'Continue',
-                          press: () {
-                            Navigator.pushNamed(context, RegistrationScreen.routeName);
-                          },
-                        ),
-                      ),
-                    ],
-                  ),
+                DefaultButton(
+                  text: 'Continue',
+                  press: () {
+                    Navigator.pushNamed(
+                        context, RegistrationScreen.routeName);
+                  },
                 )
                 // Spacer(),
               ],
@@ -138,7 +128,7 @@ class InstructionCard extends StatelessWidget {
                 style: TextStyle(
                   fontSize: SizeConfig.screenWidth > 425
                       ? getProportionateScreenWidth(6)
-                      : getProportionateScreenWidth(12),
+                      : getProportionateScreenWidth(8),
                   color: Colors.black,
                   fontWeight: FontWeight.bold,
                 ),
@@ -148,7 +138,7 @@ class InstructionCard extends StatelessWidget {
                 style: TextStyle(
                   fontSize: SizeConfig.screenWidth > 425
                       ? getProportionateScreenWidth(6)
-                      : getProportionateScreenWidth(10),
+                      : getProportionateScreenWidth(8),
                   color: Colors.black54,
                 ),
               ),

@@ -1,7 +1,5 @@
 import 'dart:async';
 
-import 'dart:ui';
-
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:quiz_app/model/Student.dart';
@@ -227,7 +225,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     newQuestion();
                   }
                 } else {
-                  _scaffoldKey.currentState.showSnackBar(new SnackBar(
+                  ScaffoldMessenger.of(context).showSnackBar(new SnackBar(
                       content: new Text('Complete your friend\'s name!')));
                 }
               },

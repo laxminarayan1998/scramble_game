@@ -27,6 +27,7 @@ class _SplashScreenState extends State<SplashScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
+        width: MediaQuery.of(context).size.width,
         decoration: BoxDecoration(
           gradient: kPrimaryGradientColor,
         ),
@@ -34,12 +35,20 @@ class _SplashScreenState extends State<SplashScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Spacer(),
-            SplashImage(imagePath: imagePath),
+            Expanded(
+              child: SplashImage(imagePath: imagePath),
+            ),
             SplashSubTitle(),
             Spacer(),
-            Image.asset(
-              'assets/icons/nryn.png',
-              scale: 5,
+            Opacity(
+              opacity: .3,
+              child: Image.asset(
+                'assets/icons/nryn.png',
+                scale: 5,
+              ),
+            ),
+            SizedBox(
+              height: MediaQuery.of(context).size.height * .01,
             ),
           ],
         ),

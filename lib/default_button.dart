@@ -13,18 +13,21 @@ class DefaultButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
+    return Container(
+      margin: EdgeInsets.all(20),
       width: double.infinity,
-      height: getProportionateScreenHeight(36),
-      child: FlatButton(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        color: kPrimaryColor,
+      height: getProportionateScreenHeight(38),
+      child: TextButton(
+        style: ButtonStyle(
+          backgroundColor: MaterialStateProperty.all(Colors.blue),
+          shadowColor: MaterialStateProperty.all(kPrimaryColor),
+        ),
         onPressed: press,
         child: FittedBox(
           child: Text(
             text,
             style: TextStyle(
-              fontSize: 22,
+              fontSize: 18,
               color: Colors.white,
             ),
           ),

@@ -125,7 +125,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                   arguments: searchIdText.text,
                 );
               } else {
-                _scaffoldKey.currentState.showSnackBar(
+                ScaffoldMessenger.of(context).showSnackBar(
                   new SnackBar(
                     content:
                         new Text('Please enter correct registration number!'),
@@ -133,7 +133,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                 );
               }
             } else {
-              _scaffoldKey.currentState.showSnackBar(
+              ScaffoldMessenger.of(context).showSnackBar(
                 new SnackBar(
                   content:
                       new Text('Please enter correct registration number!'),

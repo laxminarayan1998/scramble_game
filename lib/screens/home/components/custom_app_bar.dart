@@ -99,8 +99,11 @@ class CustomAppBar extends PreferredSize {
     return SizedBox(
       height: 50,
       width: 50,
-      child: FlatButton(
-        padding: EdgeInsets.zero,
+      child: TextButton(
+        // padding: EdgeInsets.zero,
+        style: TextButton.styleFrom(
+          padding: EdgeInsets.zero,
+        ),
         onPressed: () async {
           await showAlertDialog(context);
         },
@@ -111,11 +114,13 @@ class CustomAppBar extends PreferredSize {
 }
 
 showAlertDialog(BuildContext context) async {
-  Widget okButton = FlatButton(
-    shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(18.0),
-      side: BorderSide(
-        color: Color(0xFFFF3535),
+  Widget okButton = TextButton(
+    style: TextButton.styleFrom(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(18.0),
+        side: BorderSide(
+          color: Color(0xFFFF3535),
+        ),
       ),
     ),
     child: Text("OK"),
@@ -143,25 +148,40 @@ showAlertDialog(BuildContext context) async {
           Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: <Widget>[
-                FlatButton(
-                  color: Color(0xFFDEDEDE),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(18.0),
+                TextButton(
+                  style: TextButton.styleFrom(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(18.0),
+                      side: BorderSide(
+                        color: Color(0xFFDEDEDE),
+                      ),
+                    ),
                   ),
+                  // color: ,
+                  // shape: RoundedRectangleBorder(
+                  //   borderRadius: BorderRadius.circular(18.0),
+                  // ),
                   child: Text("No"),
                   onPressed: () {
                     Navigator.of(context).pop();
                   },
                 ),
-                FlatButton(
-                  
-                  color: Color(0xFFFF3535),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(18.0),
+                TextButton(
+                  style: TextButton.styleFrom(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(18.0),
+                      side: BorderSide(
+                        color: Color(0xFFFF3535),
+                      ),
+                    ),
                   ),
+                  // color: Color(0xFFFF3535),
+                  // shape: RoundedRectangleBorder(
+                  //   borderRadius: BorderRadius.circular(18.0),
+                  // ),
                   child: Text(
                     "Yes",
-                    style: TextStyle(color: Color(0xFFFFFFFF)),
+                    style: TextStyle(color: Colors.black),
                   ),
                   onPressed: () {
                     Navigator.pushNamed(context, RegistrationScreen.routeName);
