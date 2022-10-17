@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:quiz_app/default_button.dart';
+import 'package:quiz_app/model/Student.dart';
 import 'package:quiz_app/screens/registration_no/registration_screen.dart';
 
 import '../../constants.dart';
@@ -28,14 +29,19 @@ class LoginPage extends StatelessWidget {
                 SizedBox(
                   height: SizeConfig.screenHeight * 0.03,
                 ),
-                Text(
-                  "Instructions",
-                  style: TextStyle(
-                    fontSize: SizeConfig.screenWidth > 425
-                        ? getProportionateScreenWidth(10)
-                        : getProportionateScreenWidth(26) / 1.5,
-                    color: Colors.black,
-                    fontWeight: FontWeight.bold,
+                GestureDetector(
+                  onTap: () {
+                    getStudentsData();
+                  },
+                  child: Text(
+                    "Instructions",
+                    style: TextStyle(
+                      fontSize: SizeConfig.screenWidth > 425
+                          ? getProportionateScreenWidth(10)
+                          : getProportionateScreenWidth(26) / 1.5,
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
                 SizedBox(

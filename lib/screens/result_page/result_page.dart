@@ -19,7 +19,7 @@ class ResultPage extends StatelessWidget {
         'https://oecgame-4c5b7.firebaseio.com/scoreList/${data['regdNo']}.json';
     try {
       http.patch(
-        url,
+        Uri.parse(url),
         body: json.encode(
           {
             'points': data['score'],

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:autocomplete_textfield/autocomplete_textfield.dart';
 import 'package:flutter/material.dart';
 import 'package:quiz_app/default_button.dart';
@@ -107,6 +109,8 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
         width: SizeConfig.screenWidth * 0.2,
         child: DefaultButton(
           press: () async {
+            log(users.map((e) => e.id).toList().toString());
+
             if (searchIdText.text != '') {
               if ((users.singleWhere(
                       (element) => element.id == searchIdText.text,

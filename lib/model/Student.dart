@@ -46,10 +46,10 @@ List<Student> students = [];
 Future<void> getStudentsData() async {
   students.clear();
   var url =
-      'https://raw.githubusercontent.com/laxminarayan1998/oec2017-2021_api/master/oec.json';
+      'https://raw.githack.com/laxminarayan1998/oec2017-2021_api/master/oec.json';
 
   try {
-    final response = await http.get(url);
+    final response = await http.get(Uri.parse(url));
     final extractedData = json.decode(response.body) as Map<String, dynamic>;
 
     final _random = new Random();

@@ -1,16 +1,16 @@
-{
-    "configurations": [
-        {
-            "name": "debug_option_1",
-            "request": "launch",
-            "type": "dart",
-            "flutterMode": "debug",
-            "args": [
-                "-d",
-                "chrome",
-                "--web-renderer",
-                "html",
-            ]
-        },
-    ]
-}
+// {
+//     "configurations": [
+//         {
+//             "name": "debug_option_1",
+//             "request": "launch",
+//             "type": "dart",
+//             "flutterMode": "debug",
+//             "args": [
+//                 "-d",
+//                 "chrome",
+//                 "--web-renderer",
+//                 "html",
+//             ]
+//         },
+//     ]
+// }

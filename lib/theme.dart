@@ -6,7 +6,6 @@ ThemeData themeData(BuildContext context) {
   return ThemeData(
     appBarTheme: appBarTheme,
     primaryColor: kPrimaryColor,
-    accentColor: Colors.black,
     fontFamily: "Muli",
     inputDecorationTheme: inputDecorationTheme(),
     colorScheme: ColorScheme.light(

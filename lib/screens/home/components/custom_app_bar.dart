@@ -114,20 +114,6 @@ class CustomAppBar extends PreferredSize {
 }
 
 showAlertDialog(BuildContext context) async {
-  Widget okButton = TextButton(
-    style: TextButton.styleFrom(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(18.0),
-        side: BorderSide(
-          color: Color(0xFFFF3535),
-        ),
-      ),
-    ),
-    child: Text("OK"),
-    onPressed: () {
-      Navigator.pushNamed(context, RegistrationScreen.routeName);
-    },
-  );
 
   AlertDialog alert = AlertDialog(
     title: Center(

@@ -29,13 +29,14 @@ Future<void> getScoreBoardList() async {
   var url = 'https://oecgame-4c5b7.firebaseio.com/scoreList.json';
 
   try {
-    final response = await http.get(url);
+    final response = await http.get(Uri.parse(url));
     final extractedData = json.decode(response.body) as Map<String, dynamic>;
     extractedData.forEach((key, value) {
-      users.add(User(
-          id: key,
-          name: extractedData[key]['name'],
-          points: extractedData[key]['points']));
+      if (!users.map((e) => e.id).contains(key))
+        users.add(User(
+            id: key,
+            name: extractedData[key]['name'],
+            points: extractedData[key]['points']));
     });
     usersByPoints = users.where((element) => element.points > 0).toList();
   } catch (error) {
